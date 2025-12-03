@@ -40,4 +40,25 @@ public class AuthService
             User = userResponse
         };
     }
+    public async Task<UserReponse> GetMeAsync(string accessToken)
+    {
+        if (string.IsNullOrWhiteSpace(accessToken))
+            throw new UnauthorizedAccessException("Token không hợp lệ.");
+
+        // Lấy user Supabase từ access token
+        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
+        if (gotrueUser == null)
+            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
+
+        var email = gotrueUser.Email;
+        if (string.IsNullOrEmpty(email))
+            throw new Exception("Không lấy được email từ Supabase user.");
+
+        // Tìm user trong bảng user của bạn
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null)
+            throw new Exception("Không tìm thấy user trong database.");
+
+        return user.ToResponse();
+    }
 }

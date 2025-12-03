@@ -2,6 +2,8 @@ using AgenticAR.Application.Services;
 using AgenticAR.Infrastructure.Repository;
 using CO4029_BE.API.Contracts.Requests;
 using CO4029_BE.API.Contracts.Responses;
+using CO4029_BE.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Supabase;
 
@@ -55,4 +57,28 @@ public class UserManagementFacade : Controller
             return StatusCode(500, new { message = ex.Message });
         }
     }
+    
+    [HttpGet("me")]
+    public async Task<ActionResult<UserReponse>> GetMe()
+    {
+        try
+        {
+            var token = HttpContext.GetAccessToken();
+            if (string.IsNullOrWhiteSpace(token))
+                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+
+            var userResponse = await authService.GetMeAsync(token);
+            return Ok(userResponse);
+
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
+    }
+
 }
