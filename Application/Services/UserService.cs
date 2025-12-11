@@ -52,7 +52,10 @@ public class UserService
             email = request.Email,
             name = request.Name,
             phone = request.Phone,
-            birthday = request.Birthday
+            birthday = request.Birthday,
+            gender = request.Gender,
+            role = request.Role,
+            cccd = request.CCCD
         };
 
         var created = await _userRepository.CreateAsync(user);

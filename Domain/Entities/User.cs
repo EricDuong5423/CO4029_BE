@@ -15,5 +15,11 @@ public class User: BaseModel
     public string? phone { get; set; }
     [Column("birthday")]
     public DateTime? birthday { get; set; }
+    [Column("gender")]
+    public string? gender { get; set; }
+    [Column("CCCD")]
+    public string? cccd { get; set; }
+    [Column("role")]
+    public string? role { get; set; }
 
 }

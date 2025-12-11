@@ -29,16 +29,8 @@ public class AuthService
         var user = await _userRepository.GetByEmailAsync(userEmail);
 
         if (user == null) throw new Exception("Không tìm thấy user");
-        
-        var userResponse = user.ToResponse();
 
-        return new LoginResponse
-        {
-            AccessToken = session.AccessToken,
-            RefreshToken = session.RefreshToken,
-            ExpiresAt = session.ExpiresAt(),
-            User = userResponse
-        };
+        return session.ToResponse();
     }
     public async Task<UserReponse> GetMeAsync(string accessToken)
     {

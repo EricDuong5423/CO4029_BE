@@ -1,5 +1,6 @@
 using AgenticAR.Application;
 using AgenticAR.Infrastructure;
+using CO4029_BE.API.Contracts.Examples;
 using Microsoft.OpenApi.Models;
 using Supabase;
 
@@ -19,29 +20,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-
+    options.SchemaFilter<ExampleSchemaFilter>();
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = ParameterLocation.Header,
-        Description = "Nhập token dạng: Bearer {token}",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        Description = "Please enter token",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header
     });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 

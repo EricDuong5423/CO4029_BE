@@ -28,7 +28,7 @@ public class UserManagementFacade : Controller
         try
         {
             var user = await userService.RegisterUserAsync(request);
-            return CreatedAtAction(nameof(Register), new { id = user.Id }, user);
+            return Ok(user);
         }
         catch (InvalidOperationException ex)
         {
@@ -41,7 +41,7 @@ public class UserManagementFacade : Controller
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserReponse>> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
     {
         try
         {
