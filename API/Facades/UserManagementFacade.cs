@@ -81,4 +81,25 @@ public class UserManagementFacade : Controller
         }
     }
 
+    [HttpPost("update")]
+    public async Task<ActionResult<UserReponse>> Update([FromBody] UpdateUserRequest request)
+    {
+        try
+        {
+            var token = HttpContext.GetAccessToken();
+            if (string.IsNullOrWhiteSpace(token))
+                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            
+            var result = await userService.UpdateUserAsync(request, token);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
+    }
 }

@@ -6,7 +6,7 @@ namespace CO4029_BE.Domain.Entities;
 public class User: BaseModel
 {
     [PrimaryKey("id", false)]
-    public Guid id { get; set; }
+    public string? id { get; set; }
     [Column("name")]
     public string? name { get; set; }
     [Column("email")]
