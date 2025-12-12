@@ -57,5 +57,26 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "gender", new OpenApiString("Male") }
             };
         }
+
+        if (context.Type == typeof(UpdateUserRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "name", new OpenApiString("Duong Thanh Tu") },
+                { "phone", new OpenApiString("0966866203") },
+                { "birthday", new OpenApiString("2025-12-11T05:33:56.193Z") },
+                { "gender", new OpenApiString("Male") }
+            };
+        }
+
+        if (context.Type == typeof(ChangePasswordRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "newPassword", new OpenApiString("123456789") },
+                { "oldPassword", new OpenApiString("tu05042003") },
+                {"otpCode", new OpenApiString("123456") },
+            };
+        }
     }
 }

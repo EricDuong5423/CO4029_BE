@@ -7,10 +7,10 @@ namespace AgenticAR.Infrastructure.Repository
     public interface IRepository<T> where T : BaseModel, new()
     {
         Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(Guid id);
+        Task<T> GetByIdAsync(string id);
         Task<T> CreateAsync(T entity);
-        Task UpdateAsync(Guid id, T entity);
-        Task DeleteAsync(Guid id);
+        Task UpdateAsync(string id, T entity);
+        Task DeleteAsync(string id);
     }
 
     public class Repository<T> : IRepository<T> where T : BaseModel, new()
@@ -30,10 +30,10 @@ namespace AgenticAR.Infrastructure.Repository
             return response.Models;
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(string id)
         {
             var model = await Table
-                .Filter("id", Constants.Operator.Equals, id.ToString())
+                .Filter("id", Constants.Operator.Equals, id)
                 .Get();
 
             return model.Models.FirstOrDefault();
@@ -45,17 +45,17 @@ namespace AgenticAR.Infrastructure.Repository
             return response.Model!;
         }
 
-        public async Task UpdateAsync(Guid id, T entity)
+        public async Task UpdateAsync(string id, T entity)
         {
             await Table
-                .Filter("id", Constants.Operator.Equals, id.ToString())
+                .Filter("id", Constants.Operator.Equals, id)
                 .Update(entity);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(string id)
         {
             await Table
-                .Filter("id", Constants.Operator.Equals, id.ToString())
+                .Filter("id", Constants.Operator.Equals, id)
                 .Delete();
         }
     }

@@ -102,4 +102,42 @@ public class UserManagementFacade : Controller
             return StatusCode(500, new { message = ex.Message });
         }
     }
+
+    [HttpPost("request-password-change")]
+    public async Task<ActionResult> RequestPasswordChange()
+    {
+        try
+        {
+            var token = HttpContext.GetAccessToken();
+            if (string.IsNullOrWhiteSpace(token))
+                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            bool result = await authService.SendOtpCode(token);
+            return Ok(new {message = "Gửi OTP thành công"});
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("change-password")]
+    public async Task<ActionResult<UserReponse>> ChangePassword([FromBody]  ChangePasswordRequest request)
+    {
+        try
+        {
+            var token = HttpContext.GetAccessToken();
+            if (string.IsNullOrWhiteSpace(token))
+                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            var result = await authService.ChangePasswordAsync(token,request.otpCode, request.newPassword, request.oldPassword);
+            return Ok(new {message = "Đổi mật khẩu thành công", result = result});
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, new { message = e.Message });
+        }
+    }
 }

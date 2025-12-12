@@ -23,6 +23,7 @@ namespace AgenticAR.Infrastructure
                 )
             );
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOtpCodeRepository, OtpCodeRepository>();
             return services;
         }
     }

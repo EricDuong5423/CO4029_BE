@@ -3,10 +3,17 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 public class SecurityRequirementsOperationFilter : IOperationFilter
 {
+    private List<string> listEndPointNeedProtect = new List<string> {
+        "users/me",
+        "users/update",
+        "users/request-password-change",
+        "users/change-password"
+    };
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        // Kiểm tra nếu đây là endpoint "/users/me"
-        if (context.ApiDescription.RelativePath == "users/me")
+        string endpoint = context.ApiDescription.RelativePath;
+        
+        if (listEndPointNeedProtect.Contains(endpoint))
         {
             operation.Security = new List<OpenApiSecurityRequirement>
             {

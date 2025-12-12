@@ -70,10 +70,11 @@ public class UserService
         if (user == null)
             throw new Exception("Không tìm thấy user");
 
-        user.name = request.Name;
-        user.phone = request.Phone;
-        user.gender = request.Gender;
-        user.birthday = request.Birthday;
+        user.name = request.Name ?? user.name;
+        user.phone = request.Phone ?? user.phone;
+        user.gender = request.Gender ?? user.gender;
+        user.birthday = request.Birthday ??  user.birthday;
+        await _userRepository.UpdateAsync(user.id, user);
         return user.ToResponse();
     }
 }
