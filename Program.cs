@@ -11,6 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 // ----------------------------
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+
+});
 
 // ----------------------------
 // 2. Add Controllers & Swagger
