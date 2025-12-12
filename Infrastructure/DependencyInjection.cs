@@ -7,14 +7,18 @@ namespace AgenticAR.Infrastructure
 {
     public static class DependencyInjection
     {
+        public static string supabaseApiKey;
+        public static string supabaseUrl;
         public static IServiceCollection AddInfrastructureServices(
             this IServiceCollection services,
             IConfiguration config)
         {
+            supabaseApiKey = config["supabaseApiKey"];
+            supabaseUrl = config["supabaseUrl"];
             services.AddSingleton<Supabase.Client>(_ =>
                 new Supabase.Client(
-                    config["SupabaseUrl"],
-                    config["SupabaseApiKey"],
+                    supabaseUrl,
+                    supabaseApiKey,
                     new SupabaseOptions
                     {
                         AutoRefreshToken = true,

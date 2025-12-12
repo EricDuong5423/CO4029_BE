@@ -4,6 +4,7 @@ using CO4029_BE.API.Contracts.Requests;
 using CO4029_BE.API.Contracts.Responses;
 using CO4029_BE.Domain.Entities;
 using Supabase;
+using Microsoft.Extensions.Configuration;
 
 namespace AgenticAR.Application.Services;
 
@@ -11,11 +12,16 @@ public class UserService
 {
     private readonly IUserRepository _userRepository;
     private readonly Client _supabaseClient;
+    private IConfiguration configuration;
 
     public UserService(IUserRepository userRepository, Client supabaseClient)
     {
         _userRepository = userRepository;
         _supabaseClient = supabaseClient;
+        configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
     }
 
     public async Task<UserReponse> RegisterUserAsync(CreateUserRequest request)
@@ -76,5 +82,25 @@ public class UserService
         user.birthday = request.Birthday ??  user.birthday;
         await _userRepository.UpdateAsync(user.id, user);
         return user.ToResponse();
+    }
+
+    public async Task<bool> DeleteUserAsync(string accessToken)
+    {
+        if (string.IsNullOrWhiteSpace(accessToken))
+            throw new UnauthorizedAccessException("Token không hợp lệ.");
+        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
+        if (gotrueUser == null)
+            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
+        var email = gotrueUser.Email;
+        if (string.IsNullOrEmpty(email))
+            throw new Exception("Không lấy được email từ Supabase user.");
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null)
+            throw new Exception("Không tìm thấy user trong database.");
+        
+        await _userRepository.DeleteAsync(user.id);
+        await _supabaseClient.AdminAuth(configuration["SupabaseAdminKey"])
+            .DeleteUser(gotrueUser.Id);
+        return true;
     }
 }

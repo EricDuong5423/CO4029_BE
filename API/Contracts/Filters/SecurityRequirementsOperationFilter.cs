@@ -7,7 +7,8 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
         "users/me",
         "users/update",
         "users/request-password-change",
-        "users/change-password"
+        "users/change-password",
+        "users/delete-user"
     };
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {

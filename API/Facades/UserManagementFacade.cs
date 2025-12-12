@@ -140,4 +140,21 @@ public class UserManagementFacade : Controller
             return StatusCode(500, new { message = e.Message });
         }
     }
+
+    [HttpDelete("delete-user")]
+    public async Task<ActionResult> DeleteUser()
+    {
+        try
+        {
+            var token = HttpContext.GetAccessToken();
+            if (string.IsNullOrWhiteSpace(token))
+                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            var result = await userService.DeleteUserAsync(token);
+            return Ok(new {message = "Xóa thành công"});
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, new { message = e.Message });
+        }
+    }
 }
