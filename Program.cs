@@ -49,11 +49,12 @@ var app = builder.Build();
 // ----------------------------
 // 3. Middleware
 // ----------------------------
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = string.Empty; // Để Swagger là trang mặc định khi vào link web
+});
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
