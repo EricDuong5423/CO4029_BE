@@ -22,12 +22,12 @@ public class UserManagementFacade : Controller
         this.authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<ActionResult<UserReponse>> Register([FromBody] CreateUserRequest request)
+    [HttpPost("create-customer")]
+    public async Task<ActionResult<UserReponse>> RegisterCustomer([FromBody] CreateUserRequest request)
     {
         try
         {
-            var user = await userService.RegisterUserAsync(request);
+            var user = await userService.RegisterCustomerAsync(request);
             return Ok(user);
         }
         catch (InvalidOperationException ex)
@@ -63,12 +63,10 @@ public class UserManagementFacade : Controller
     {
         try
         {
-            var token = HttpContext.GetAccessToken();
-            if (string.IsNullOrWhiteSpace(token))
-                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            var token = await AccessToken.GetAccessToken(HttpContext);
 
-            var userResponse = await authService.GetMeAsync(token);
-            return Ok(userResponse);
+            var result = await authService.GetMeAsync(token);
+            return Ok(result);
 
         }
         catch (UnauthorizedAccessException ex)
@@ -81,14 +79,12 @@ public class UserManagementFacade : Controller
         }
     }
 
-    [HttpPost("update")]
+    [HttpPost("update-customer")]
     public async Task<ActionResult<UserReponse>> Update([FromBody] UpdateUserRequest request)
     {
         try
         {
-            var token = HttpContext.GetAccessToken();
-            if (string.IsNullOrWhiteSpace(token))
-                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            var token = await AccessToken.GetAccessToken(HttpContext);
             
             var result = await userService.UpdateUserAsync(request, token);
             return Ok(result);
@@ -104,14 +100,12 @@ public class UserManagementFacade : Controller
     }
 
     [HttpPost("request-password-change")]
-    public async Task<ActionResult> RequestPasswordChange()
+    public async Task<ActionResult> RequestPasswordChange([FromBody] SendOTPRequest request)
     {
         try
         {
-            var token = HttpContext.GetAccessToken();
-            if (string.IsNullOrWhiteSpace(token))
-                return Unauthorized(new { message = "Missing or invalid Authorization header" });
-            bool result = await authService.SendOtpCode(token);
+            var email = request.Email;
+            bool result = await authService.SendOtpCode(email);
             return Ok(new {message = "Gửi OTP thành công"});
         }
         catch (UnauthorizedAccessException ex)
@@ -129,10 +123,7 @@ public class UserManagementFacade : Controller
     {
         try
         {
-            var token = HttpContext.GetAccessToken();
-            if (string.IsNullOrWhiteSpace(token))
-                return Unauthorized(new { message = "Missing or invalid Authorization header" });
-            var result = await authService.ChangePasswordAsync(token,request.otpCode, request.newPassword, request.oldPassword);
+            var result = await authService.ChangePasswordAsync(request.email,request.otpCode, request.newPassword, request.oldPassword);
             return Ok(new {message = "Đổi mật khẩu thành công", result = result});
         }
         catch (Exception e)
@@ -146,9 +137,7 @@ public class UserManagementFacade : Controller
     {
         try
         {
-            var token = HttpContext.GetAccessToken();
-            if (string.IsNullOrWhiteSpace(token))
-                return Unauthorized(new { message = "Missing or invalid Authorization header" });
+            var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await userService.DeleteUserAsync(token);
             return Ok(new {message = "Xóa thành công"});
         }

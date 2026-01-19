@@ -3,8 +3,8 @@ using CO4029_BE.API.Contracts.Mappers;
 using CO4029_BE.API.Contracts.Requests;
 using CO4029_BE.API.Contracts.Responses;
 using CO4029_BE.Domain.Entities;
+using CO4029_BE.Utils;
 using Supabase;
-using Microsoft.Extensions.Configuration;
 
 namespace AgenticAR.Application.Services;
 
@@ -24,7 +24,7 @@ public class UserService
             .Build();
     }
 
-    public async Task<UserReponse> RegisterUserAsync(CreateUserRequest request)
+    public async Task<UserReponse> RegisterCustomerAsync(CreateUserRequest request)
     {
         var existing = await _userRepository.GetByEmailAsync(request.Email);
         if (existing != null)
@@ -58,8 +58,7 @@ public class UserService
             phone = request.Phone,
             birthday = request.Birthday,
             gender = request.Gender,
-            role = request.Role,
-            cccd = request.CCCD
+            role = "Customer"
         };
 
         var created = await _userRepository.CreateAsync(user);
@@ -68,13 +67,7 @@ public class UserService
 
     public async Task<UserReponse> UpdateUserAsync(UpdateUserRequest request, string accessToken)
     {
-        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
-        if (gotrueUser == null)
-            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
-        
-        User? user = await _userRepository.GetByEmailAsync(gotrueUser.Email);
-        if (user == null)
-            throw new Exception("Không tìm thấy user");
+        var user = await AccessToken.GetUser(accessToken, _supabaseClient, _userRepository);
 
         user.name = request.Name ?? user.name;
         user.phone = request.Phone ?? user.phone;

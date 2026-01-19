@@ -40,36 +40,13 @@ public class AuthService
     }
     public async Task<UserReponse> GetMeAsync(string accessToken)
     {
-        if (string.IsNullOrWhiteSpace(accessToken))
-            throw new UnauthorizedAccessException("Token không hợp lệ.");
-
-        // Lấy user Supabase từ access token
-        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
-        if (gotrueUser == null)
-            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
-
-        var email = gotrueUser.Email;
-        if (string.IsNullOrEmpty(email))
-            throw new Exception("Không lấy được email từ Supabase user.");
-
-        // Tìm user trong bảng user của bạn
-        var user = await _userRepository.GetByEmailAsync(email);
-        if (user == null)
-            throw new Exception("Không tìm thấy user trong database.");
-
+        var user = await AccessToken.GetUser(accessToken, _supabaseClient, _userRepository);
+        user = await _userRepository.GetByEmailAsync(user.email);
         return user.ToResponse();
     }
 
-    public async Task<bool> SendOtpCode(string accessToken)
+    public async Task<bool> SendOtpCode(string email)
     {
-        if (string.IsNullOrWhiteSpace(accessToken))
-            throw new UnauthorizedAccessException("Token không hợp lệ.");
-        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
-        if (gotrueUser == null)
-            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
-        var email = gotrueUser.Email;
-        if (string.IsNullOrEmpty(email))
-            throw new Exception("Không lấy được email từ Supabase user.");
         var user = await _userRepository.GetByEmailAsync(email);
         if (user == null)
             throw new Exception("Không tìm thấy user trong database.");
@@ -93,26 +70,16 @@ public class AuthService
         return true;
     }
 
-    public async Task<UserReponse> ChangePasswordAsync(string accessToken, string otpCode, string newPassword, string oldPassword)
+    public async Task<UserReponse> ChangePasswordAsync(string email, string otpCode, string newPassword, string oldPassword)
     {
-        if (string.IsNullOrWhiteSpace(accessToken))
-            throw new UnauthorizedAccessException("Token không hợp lệ.");
-        var gotrueUser = await _supabaseClient.Auth.GetUser(accessToken);
-        if (gotrueUser == null)
-            throw new UnauthorizedAccessException("Token Supabase không hợp lệ hoặc đã hết hạn.");
-        var email = gotrueUser.Email;
-        if (string.IsNullOrEmpty(email))
-            throw new Exception("Không lấy được email từ Supabase user.");
         var user = await _userRepository.GetByEmailAsync(email);
-        if (user == null)
-            throw new Exception("Không tìm thấy user trong database.");
 
         bool isOtpValid = await VerifyOTPCode(user,otpCode);
         if (!isOtpValid)
         {
             throw new Exception("OTP không hợp lệ hoặc đã hết hạn.");
         }
-        var session = await _supabaseClient.Auth.SignInWithPassword(user.email, oldPassword);
+        var session = await _supabaseClient.Auth.SignInWithPassword(email, oldPassword);
         if (session == null)
             throw new Exception();
         var updatedResult = await _supabaseClient.Auth.Update(new Supabase.Gotrue.UserAttributes

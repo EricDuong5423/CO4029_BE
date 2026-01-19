@@ -8,7 +8,5 @@ public class CreateUserRequest
     public string? Name { get; set; }
     public string? Phone { get; set; }
     public DateTime? Birthday { get; set; }
-    public string? CCCD { get; set; }
-    public string? Role { get; set; }
     public string? Gender { get; set; }
 }

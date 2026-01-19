@@ -2,7 +2,8 @@
 
 public class ChangePasswordRequest
 {
-    public string newPassword { get; set; }
-    public string oldPassword { get; set; }
-    public string otpCode { get; set; }
+    public string? email { get; set; }
+    public string? newPassword { get; set; }
+    public string? oldPassword { get; set; }
+    public string? otpCode { get; set; }
 }

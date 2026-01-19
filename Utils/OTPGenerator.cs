@@ -2,7 +2,7 @@
 
 public class OTPGenerator
 {
-    public static string GenerateOTP(int length = 6)
+    public static string GenerateOTP(int length = 4)
     {
         Random random = new Random();
         string otp = "";

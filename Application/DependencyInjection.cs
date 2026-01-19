@@ -10,6 +10,7 @@ namespace AgenticAR.Application
         {
             services.AddScoped<AuthService>();
             services.AddScoped<UserService>();
+            services.AddScoped<HistoryService>();
             return services;
         }
     }

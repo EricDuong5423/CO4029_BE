@@ -6,9 +6,10 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
     private List<string> listEndPointNeedProtect = new List<string> {
         "users/me",
         "users/update",
-        "users/request-password-change",
-        "users/change-password",
-        "users/delete-user"
+        "users/delete-user",
+        "users/update-customer",
+        "chat/create-history",
+        "chat/get-all-history"
     };
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {

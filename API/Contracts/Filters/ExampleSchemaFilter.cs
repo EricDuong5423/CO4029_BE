@@ -19,8 +19,6 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "name", new OpenApiString("Duong Thanh Tu") },
                 { "phone", new OpenApiString("0966866203") },
                 { "birthday", new OpenApiString("2025-12-11T05:33:56.193Z") },
-                { "cccd", new OpenApiString("09893133892839") },
-                { "role", new OpenApiString("Customer") },
                 { "gender", new OpenApiString("Male") }
             };
         }
@@ -73,9 +71,36 @@ public class ExampleSchemaFilter: ISchemaFilter
         {
             schema.Example = new OpenApiObject
             {
+                {"email", new OpenApiString("tuduong05042003@gmail.com")},
                 { "newPassword", new OpenApiString("123456789") },
                 { "oldPassword", new OpenApiString("tu05042003") },
                 {"otpCode", new OpenApiString("123456") },
+            };
+        }
+
+        if (context.Type == typeof(SendOTPRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Email", new OpenApiString("tuduong05042003@gmail.com") }
+            };
+        }
+
+        if (context.Type == typeof(CreateHistoryRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Header", new OpenApiString("Where is B4?") },
+                { "Date", new OpenApiString("2025-12-11T06:40:09.513311") }
+            };
+        }
+
+        if (context.Type == typeof(HistoryReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Header", new OpenApiString("Where is B4?") },
+                { "Create_date", new OpenApiString("2025-12-11T06:40:09.513311") }
             };
         }
     }
