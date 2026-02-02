@@ -103,5 +103,40 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "Create_date", new OpenApiString("2025-12-11T06:40:09.513311") }
             };
         }
+
+        if (context.Type == typeof(CreateBuildingRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Name", new OpenApiString("B4") },
+                { "Content", new OpenApiString("B4 gần Circle K") },
+                { "Latitude", new OpenApiFloat(14.55f) },
+                { "Longitude", new OpenApiFloat(12.55f) },
+                { "UserId", new OpenApiString("1231241424894893") },
+            };
+        }
+
+        if (context.Type == typeof(UpdateBuildingRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Name", new OpenApiString("B4") },
+                { "Content", new OpenApiString("B4 gần Circle K") },
+                { "Latitude", new OpenApiFloat(14.55f) },
+                { "Longitude", new OpenApiFloat(12.55f) }
+            };
+        }
+
+        if (context.Type == typeof(BuildingReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                {"Id", new OpenApiString("31232178784398") },
+                { "Name", new OpenApiString("B4") },
+                { "Content", new OpenApiString("B4 gần Circle K") },
+                { "Latitude", new OpenApiFloat(14.55f) },
+                { "Longitude", new OpenApiFloat(12.55f) }
+            };
+        }
     }
 }

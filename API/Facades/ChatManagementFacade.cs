@@ -28,7 +28,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return BadRequest(ex.Message);
         }
     }
 
@@ -43,7 +43,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return BadRequest(ex.Message);
         }
     }
 }

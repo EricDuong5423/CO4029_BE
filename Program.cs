@@ -56,7 +56,11 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty; // Để Swagger là trang mặc định khi vào link web
 });
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment()) 
+{
+    app.UseHttpsRedirection();
+}
+app.UseCors("AllowAnyOrigin");
 app.UseAuthorization();
 
 app.MapControllers();
