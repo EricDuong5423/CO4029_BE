@@ -98,18 +98,21 @@ public class CampusService
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
         }
         
-        var building = await buildingRepository.GetByIdAsync(buildingId);
-        if (building == null) throw new Exception("Không tồn tại building");
+        var oldBuilding = await buildingRepository.GetByIdAsync(buildingId);
+        if (oldBuilding == null) throw new Exception("Không tồn tại building");
+        var updateModel = new Building
+        {
+            ID = buildingId,
+            Name = request.Name ?? oldBuilding.Name,
+            Content = request.Content ?? oldBuilding.Content,
+            Latitude = request.Latitude ?? oldBuilding.Latitude,
+            Longitude = request.Longitude ?? oldBuilding.Longitude,
+            UserId = user.id
+        };
         
-        building.Name = request.Name ?? building.Name;
-        building.Content = request.Content ?? building.Content;
-        building.Latitude = request.Latitude ?? building.Latitude;
-        building.Longitude = request.Longitude ?? building.Longitude;
-        
-        await buildingRepository.UpdateAsync(buildingId, building);
+        await buildingRepository.UpdateAsync(buildingId, updateModel);
 
-        var reponse = await buildingRepository.GetByIdAsync(buildingId);
-        return reponse.ToReponse();
+        return updateModel.ToReponse();
     }
 
     public async Task<BuildingReponse> DeleteBuilding(string buildingId, string accessToken)
