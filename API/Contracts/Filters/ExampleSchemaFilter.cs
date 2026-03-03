@@ -90,8 +90,7 @@ public class ExampleSchemaFilter: ISchemaFilter
         {
             schema.Example = new OpenApiObject
             {
-                { "Header", new OpenApiString("Where is B4?") },
-                { "Date", new OpenApiString("2025-12-11T06:40:09.513311") }
+                { "Header", new OpenApiString("Where is B4?") }
             };
         }
 
@@ -136,26 +135,6 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "Content", new OpenApiString("B4 gần Circle K") },
                 { "Latitude", new OpenApiFloat(14.55f) },
                 { "Longitude", new OpenApiFloat(12.55f) }
-            };
-        }
-
-        if (context.Type == typeof(CreateChatboxRequest))
-        {
-            schema.Example = new OpenApiObject
-            {
-                { "Content", new OpenApiString("Where is B4?") },
-                { "Contact_person", new OpenApiString("user")},
-                { "History_id", new OpenApiString("b15e1901-4254-4527-9848-159c15f6e369")},
-            };
-        }
-
-        if (context.Type == typeof(ChatboxReponse))
-        {
-            schema.Example = new OpenApiObject
-            {
-                { "Id", new OpenApiString("b15e1901-4254-4527-9848-159c15f6e369") },
-                { "Content", new OpenApiString("Where is B4?") },
-                { "Contact_person", new OpenApiString("user") }
             };
         }
 

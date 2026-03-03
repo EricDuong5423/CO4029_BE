@@ -64,8 +64,8 @@ public class AuthService
         {
             otp = OTP,
             email = user.email,
-            expires_at = DateTime.UtcNow.AddMinutes(5),
-            created_at = DateTime.UtcNow 
+            expires_at = DateTimeHelper.GetVnNow().AddMinutes(5),
+            created_at = DateTimeHelper.GetVnNow()
         });
         return true;
     }
