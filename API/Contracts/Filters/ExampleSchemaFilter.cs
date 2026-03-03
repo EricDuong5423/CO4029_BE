@@ -138,5 +138,25 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "Longitude", new OpenApiFloat(12.55f) }
             };
         }
+
+        if (context.Type == typeof(CreateChatboxRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Content", new OpenApiString("Where is B4?") },
+                { "Contact_person", new OpenApiString("user")},
+                { "History_id", new OpenApiString("b15e1901-4254-4527-9848-159c15f6e369")},
+            };
+        }
+
+        if (context.Type == typeof(ChatboxReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "Id", new OpenApiString("b15e1901-4254-4527-9848-159c15f6e369") },
+                { "Content", new OpenApiString("Where is B4?") },
+                { "Contact_person", new OpenApiString("user") }
+            };
+        }
     }
 }

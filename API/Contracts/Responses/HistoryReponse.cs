@@ -2,6 +2,7 @@
 
 public class HistoryReponse
 {
+    public string? Id { get; set; }
     public string? Header {get; set;}
     public DateTime? Create_date {get; set;}
 }

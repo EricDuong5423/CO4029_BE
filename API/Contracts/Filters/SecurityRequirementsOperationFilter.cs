@@ -11,7 +11,8 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
         "users/update-customer",
         "chat/create-history",
         "chat/get-all-history",
-        "buildings" // Chỉ cần để "buildings", nó sẽ khớp cả "buildings" và "buildings/{id}"
+        "chat",
+        "buildings"
     };
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
@@ -33,7 +34,7 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer" // Phải khớp với tên bạn định nghĩa trong AddSecurityDefinition ở Program.cs
+                                Id = "Bearer"
                             }
                         },
                         Array.Empty<string>()

@@ -7,6 +7,7 @@ public static class HistoryMapper
 {
     public static HistoryReponse ToReponse(this History history) => new HistoryReponse
     {
+        Id = history.id,
         Header = history.header,
         Create_date = history.create_date,
     };

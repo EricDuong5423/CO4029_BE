@@ -119,7 +119,7 @@ public class CampusManagementFacade : Controller
         }
     }
 
-    [HttpGet("get-by-user-id/{userId}")]
+    [HttpGet("users/{userId}")]
     public async Task<ActionResult<BuildingReponse>> GetBuildingByUserId(string userId)
     {
         try

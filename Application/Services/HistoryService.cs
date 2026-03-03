@@ -44,7 +44,7 @@ public class HistoryService
     {
         var user = await AccessToken.GetUser(accessToken, _supabaseClient, userRepository);
         
-        var histories = await historyRepository.GetHistoryByUserId(user.id);
+        var histories = await historyRepository.GetHistorysByUserId(user.id);
         
         return histories.Select(h => HistoryMapper.ToReponse(h));
     }

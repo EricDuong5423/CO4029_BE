@@ -30,6 +30,7 @@ namespace AgenticAR.Infrastructure
             services.AddScoped<IOtpCodeRepository, OtpCodeRepository>();
             services.AddScoped<IHistoryRepository, HistoryRepository>();
             services.AddScoped<IBuildingRepository, BuildingRepository>();
+            services.AddScoped<IChatBoxRepository, ChatBoxRepository>();
             return services;
         }
     }

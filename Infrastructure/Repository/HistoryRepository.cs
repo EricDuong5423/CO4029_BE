@@ -5,8 +5,8 @@ namespace AgenticAR.Infrastructure.Repository
 {
     public interface IHistoryRepository : IRepository<History>
     {
-        Task<IEnumerable<History>> GetHistoryByUserId(string? user_id);
-        Task<History?> GetSpecificHistoryByUserId(string? user_id, string history_id);
+        Task<IEnumerable<History>> GetHistorysByUserId(string? user_id);
+        Task<History?> GetHistoryByUserId(string? user_id, string history_id);
     }
 
     public class HistoryRepository: Repository<History>, IHistoryRepository
@@ -16,7 +16,7 @@ namespace AgenticAR.Infrastructure.Repository
             
         }
 
-        public async Task<IEnumerable<History>> GetHistoryByUserId(string? user_id)
+        public async Task<IEnumerable<History>> GetHistorysByUserId(string? user_id)
         {
             var reponse = await Table
                 .Where(x => x.user_id == user_id)
@@ -24,7 +24,7 @@ namespace AgenticAR.Infrastructure.Repository
             return reponse.Models;
         }
 
-        public async Task<History?> GetSpecificHistoryByUserId(string? user_id, string history_id)
+        public async Task<History?> GetHistoryByUserId(string? user_id, string history_id)
         {
             var reponse = await Table
                 .Where(x => x.user_id == user_id && x.id == history_id)
