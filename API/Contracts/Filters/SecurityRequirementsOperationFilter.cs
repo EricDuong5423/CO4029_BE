@@ -9,12 +9,9 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
         "users/update",
         "users/delete-user",
         "users/update-customer",
-        "chat/create-history",
-        "chat/get-all-history",
         "chat",
         "buildings"
     };
-
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         // Lấy đường dẫn endpoint hiện tại (VD: "buildings/{buildingId}")
