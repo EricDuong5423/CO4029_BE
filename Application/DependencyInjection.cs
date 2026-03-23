@@ -13,6 +13,7 @@ namespace AgenticAR.Application
             services.AddScoped<HistoryService>();
             services.AddScoped<CampusService>();
             services.AddScoped<ChatboxService>();
+            services.AddScoped<QuestionService>();
             return services;
         }
     }

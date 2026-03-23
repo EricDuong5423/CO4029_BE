@@ -31,6 +31,9 @@ namespace AgenticAR.Infrastructure
             services.AddScoped<IHistoryRepository, HistoryRepository>();
             services.AddScoped<IBuildingRepository, BuildingRepository>();
             services.AddScoped<IChatBoxRepository, ChatBoxRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
             return services;
         }
     }

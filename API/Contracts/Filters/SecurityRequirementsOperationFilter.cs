@@ -10,7 +10,8 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
         "users/delete-user",
         "users/update-customer",
         "chat",
-        "buildings"
+        "buildings",
+        "contacts"
     };
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {

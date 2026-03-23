@@ -157,5 +157,72 @@ public class ExampleSchemaFilter: ISchemaFilter
                 { "Contact_person", new OpenApiString("user") }
             };
         }
+        
+        if (context.Type == typeof(CreateCategoryRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "name", new OpenApiString("Thủ tục hành chính") }
+            };
+        }
+
+        if (context.Type == typeof(CategoryReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "id", new OpenApiString("cat-789-xyz") },
+                { "name", new OpenApiString("Thủ tục hành chính") }
+            };
+        }
+        
+        if (context.Type == typeof(CreateQuestionRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "content", new OpenApiString("Làm sao để đăng ký gửi xe tháng ở nhà B4?") },
+                { "email", new OpenApiString("student@hcmut.edu.vn") },
+                { "name", new OpenApiString("Nguyễn Văn A") },
+                { "createDate", new OpenApiString("2026-03-23T15:00:00Z") },
+                { "categoryId", new OpenApiString("cat-789-xyz") },
+                { "userId", new OpenApiString("user-123-abc") }
+            };
+        }
+
+        if (context.Type == typeof(QuestionReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "id", new OpenApiString("ques-456-def") },
+                { "content", new OpenApiString("Làm sao để đăng ký gửi xe tháng ở nhà B4?") },
+                { "email", new OpenApiString("student@hcmut.edu.vn") },
+                { "name", new OpenApiString("Nguyễn Văn A") },
+                { "createDate", new OpenApiString("2026-03-23T15:00:00Z") },
+                { "categoryId", new OpenApiString("cat-789-xyz") },
+                { "userId", new OpenApiString("user-123-abc") }
+            };
+        }
+        
+        if (context.Type == typeof(CreateAnswerRequest))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "content", new OpenApiString("Bạn có thể đến văn phòng đoàn tại tầng trệt nhà B4 để làm thủ tục nhé.") },
+                { "createdDate", new OpenApiString("2026-03-23T16:30:00Z") },
+                { "questionId", new OpenApiString("ques-456-def") },
+                { "userId", new OpenApiString("admin-999-mod") }
+            };
+        }
+
+        if (context.Type == typeof(AnswerReponse))
+        {
+            schema.Example = new OpenApiObject
+            {
+                { "id", new OpenApiString("ans-111-ghi") },
+                { "content", new OpenApiString("Bạn có thể đến văn phòng đoàn tại tầng trệt nhà B4 để làm thủ tục nhé.") },
+                { "createDate", new OpenApiString("2026-03-23T16:30:00Z") },
+                { "questionId", new OpenApiString("ques-456-def") },
+                { "userId", new OpenApiString("admin-999-mod") }
+            };
+        }
     }
 }
