@@ -143,7 +143,6 @@ public class ExampleSchemaFilter: ISchemaFilter
             schema.Example = new OpenApiObject
             {
                 { "Content", new OpenApiString("Where is B4?") },
-                { "Contact_person", new OpenApiString("user")},
                 { "History_id", new OpenApiString("b15e1901-4254-4527-9848-159c15f6e369")},
             };
         }

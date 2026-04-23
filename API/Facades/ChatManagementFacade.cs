@@ -51,7 +51,8 @@ public class ChatManagementFacade : Controller
     }
 
     [HttpPost("chatboxes/")]
-    public async Task<ActionResult<ChatboxReponse>> CreateChatbox([FromBody] CreateChatboxRequest createChatboxRequest)
+    public async Task<ActionResult<IEnumerable<ChatboxReponse>>> CreateChatbox(
+        [FromBody] CreateChatboxRequest createChatboxRequest)
     {
         try
         {
@@ -61,7 +62,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 
@@ -76,7 +77,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 
@@ -91,7 +92,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 
@@ -106,7 +107,7 @@ public class ChatManagementFacade : Controller
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(500, new { message = ex.Message });
         }
     }
 

@@ -15,33 +15,51 @@ public class ChatboxService
     private readonly IChatBoxRepository chatBoxRepository;
     private readonly IHistoryRepository historyRepository;
     private readonly IUserRepository userRepository;
+    private readonly ChatbotApiService chatbotApiService;
     private readonly Client _supabaseClient;
 
     public ChatboxService(IChatBoxRepository chatBoxRepository
                         , IHistoryRepository historyRepository
                         , Client client
-                        , IUserRepository userRepository)
+                        , IUserRepository userRepository
+                        , ChatbotApiService chatbotApiService)
     {
         this.chatBoxRepository = chatBoxRepository;
         this.historyRepository = historyRepository;
         this.userRepository = userRepository;
         _supabaseClient = client;
+        this.chatbotApiService = chatbotApiService;
     }
 
-    public async Task<ChatboxReponse> CreateChatbox(string accessToken ,CreateChatboxRequest request)
+    public async Task<IEnumerable<ChatboxReponse>> CreateChatbox(string accessToken, CreateChatboxRequest request)
     {
         var user = await AccessToken.GetUser(accessToken, _supabaseClient, userRepository);
+        
+        var previousMessages = await chatBoxRepository.GetChatboxesByHistoryId(request.History_id!);
 
-        var chatbox = new Chatbox
+        var userMsg = await chatBoxRepository.CreateAsync(new Chatbox
         {
             content = request.Content,
-            contact_time = request.Contact_time,
-            contact_person = request.Contact_person,
+            contact_time = DateTimeHelper.GetVnNow(),
+            contact_person = "user",
             history_id = request.History_id
-        };
-        
-        var reponse = await chatBoxRepository.CreateAsync(chatbox);
-        return ChatboxMapper.ToReponse(reponse);
+        });
+
+        var aiResult = await chatbotApiService.AskAsync(request.Content!, previousMessages);
+
+        var aiContent = aiResult.type == "text"
+            ? aiResult.content.GetString()!
+            : aiResult.content.ToString();
+
+        var aiMsg = await chatBoxRepository.CreateAsync(new Chatbox
+        {
+            content = aiContent,
+            contact_time = DateTimeHelper.GetVnNow(),
+            contact_person = "assistant",
+            history_id = request.History_id
+        });
+
+        return new[] { ChatboxMapper.ToReponse(userMsg), ChatboxMapper.ToReponse(aiMsg) };
     }
 
     public async Task<IEnumerable<ChatboxReponse>> GetAllChatboxes(string accessToken)
