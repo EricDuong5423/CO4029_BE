@@ -26,16 +26,20 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.GetAllBuildings(token);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy tất cả tòa nhà thành công",
-                data = result
-            });
+            return Ok(ApiResponse<IEnumerable<BuildingReponse>>.Ok(result
+                , "Lấy các tòa nhà thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -46,16 +50,19 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.GetBuildingById(buildingId, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy tòa nhà thành công",
-                data = result
-            });
+            return Ok(ApiResponse<BuildingReponse>.Ok(result, message: "Lấy tòa nhà thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
