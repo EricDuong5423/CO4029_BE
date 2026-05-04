@@ -17,7 +17,6 @@ public class CampusService
 
     public CampusService(IBuildingRepository buildingRepository,
                          IUserRepository userRepository,
-                         IConfiguration configuration,
                          Client supabaseClient)
     {
         this.buildingRepository = buildingRepository;

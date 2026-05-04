@@ -106,7 +106,7 @@ public class ChatboxService
         {
             throw new KeyNotFoundException("Không tìm thấy History với ID đã cung cấp.");
         }
-        if (user.id != history.user_id || !user.role.Equals("Employee"))
+        if (user.id != history.user_id || !AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new AuthenticationFailureException("Bạn không có quyền này");
         }

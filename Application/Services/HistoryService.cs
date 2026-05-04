@@ -13,17 +13,12 @@ public class HistoryService
     private readonly IHistoryRepository historyRepository;
     private readonly IUserRepository userRepository;
     private readonly Client _supabaseClient;
-    private IConfiguration configuration;
 
     public HistoryService(IHistoryRepository historyRepository, IUserRepository userRepository, Client supabaseClient)
     {
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
         this._supabaseClient = supabaseClient;
-        configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
     }
     
     public async Task<HistoryReponse> CreateHistory(CreateHistoryRequest createHistoryRequest, string accessToken)

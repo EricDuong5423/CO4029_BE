@@ -16,13 +16,11 @@ public class QuestionService
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
     private readonly Client supabaseClient;
-    private readonly IConfiguration configuration;
 
     public QuestionService(IQuestionRepository questionRepository
         , IAnswerRepository answerRepository
         , ICategoryRepository categoryRepository
         , IUserRepository userRepository
-        , IConfiguration configuration
         , Client supabaseClient)
     {
         _questionRepository = questionRepository;
@@ -30,10 +28,6 @@ public class QuestionService
         _categoryRepository = categoryRepository;
         _userRepository = userRepository;
         this.supabaseClient = supabaseClient;
-        this.configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
     }
 
     public async Task<CategoryReponse> CreateCategory(CreateCategoryRequest categoryRequest, string accessToken)

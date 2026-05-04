@@ -1,4 +1,5 @@
 using AgenticAR.Application.Services;
+using CO4029_BE.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AgenticAR.Application
@@ -15,6 +16,7 @@ namespace AgenticAR.Application
             services.AddScoped<ChatboxService>();
             services.AddScoped<QuestionService>();
             services.AddScoped<ChatbotApiService>();
+            services.AddScoped<EmailService>();
             services.AddHttpClient<ChatbotApiService>();
             return services;
         }

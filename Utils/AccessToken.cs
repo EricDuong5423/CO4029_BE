@@ -8,19 +8,11 @@ public static class AccessToken
 {
     public static async Task<String> GetAccessToken(HttpContext context)
     {
-        // 1. Lấy dòng header có tên "Authorization"
         string authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-
-        // 2. Kiểm tra xem có header không và có bắt đầu bằng "Bearer " không
         if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
-            // Debug: In ra xem nó nhận được gì (xóa khi chạy thật)
-            Console.WriteLine($"[AuthCheck] Header nhận được: '{authorizationHeader}'"); 
-            
             throw new UnauthorizedAccessException("Thiếu Access token trong header hoặc sai định dạng (Bearer ...)");
         }
-
-        // 3. Cắt bỏ chữ "Bearer " (7 ký tự) để lấy phần token phía sau
         return authorizationHeader.Substring("Bearer ".Length).Trim();
     }
     

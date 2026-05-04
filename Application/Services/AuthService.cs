@@ -13,12 +13,17 @@ public class AuthService
     private readonly IUserRepository _userRepository;
     private readonly Client _supabaseClient;
     private readonly IOtpCodeRepository _otpCodeRepository;
+    private readonly EmailService _emailService;
 
-    public AuthService(IUserRepository userRepository, IOtpCodeRepository otpCodeRepository, Client supabaseClient)
+    public AuthService(IUserRepository userRepository
+                     , IOtpCodeRepository otpCodeRepository
+                     , Client supabaseClient
+                     , EmailService emailService)
     {
         _userRepository = userRepository;
         _supabaseClient = supabaseClient;
         _otpCodeRepository = otpCodeRepository;
+        _emailService = emailService;
     }
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
@@ -59,7 +64,7 @@ public class AuthService
             }
         }
         string OTP = OTPGenerator.GenerateOTP();
-        EmailService.SendOTPMail(user.email, OTP);
+        _emailService.SendOTPMail(user.email, OTP);
         await _otpCodeRepository.CreateAsync(new OtpCode
         {
             otp = OTP,

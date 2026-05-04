@@ -6,10 +6,17 @@ namespace CO4029_BE.Utils;
 
 public class EmailService
 {
-    public static void SendOTPMail(string recipientMail, string otp)
+    private string _senderEmail;
+    private string _appPassword;
+    public EmailService(IConfiguration configuration)
+    {
+        _senderEmail = configuration["GmailSender"]!;
+        _appPassword = configuration["GmailAppPassword"]!;
+    }
+    public void SendOTPMail(string recipientMail, string otp)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Agentic AR", "agenticarhcmut@gmail.com"));
+        message.From.Add(new MailboxAddress("Agentic AR", _senderEmail));
         message.To.Add(new MailboxAddress("", recipientMail));
         message.Subject = "Your OTP Code";
         
@@ -118,7 +125,7 @@ public class EmailService
         using (var client = new SmtpClient())
         {
             client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("agenticarhcmut@gmail.com", "lfix prem dbht zrwa");
+            client.Authenticate(_senderEmail, _appPassword);
             client.Send(message);
             client.Disconnect(true);
         }
