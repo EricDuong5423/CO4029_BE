@@ -27,11 +27,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result =  await _historyService.CreateHistory(createHistoryRequest, token);
-            return Ok(result);
+            return Ok(ApiResponse<HistoryReponse>.Ok(result, message: "Tạo lịch sử trò chuyện thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -42,11 +50,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _historyService.GetHistoryByUserId(token);
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<HistoryReponse>>.Ok(result, message: "Lấy thông tin các lịch sử thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -58,11 +74,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _chatboxService.CreateChatbox(token, createChatboxRequest);
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Tạo chat box thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -73,11 +97,19 @@ public class ChatManagementFacade : Controller
         {
             var  token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _chatboxService.GetAllChatboxes(token);
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Lấy tất cả các chat box thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -88,11 +120,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _chatboxService.GetChatboxById(token, chatboxId);
-            return Ok(result);
+            return Ok(ApiResponse<ChatboxReponse>.Ok(result, message: "Lấy chat box theo id thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -103,11 +143,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _chatboxService.GetAllChatboxesByHistory(token, historyId);
-            return Ok(result);
+            return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Lấy chat box theo lịch sử chat thành công"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -118,15 +166,19 @@ public class ChatManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             await _chatboxService.DeleteChatbox(token, chatboxId);
-            return Ok("Đã xóa thành công chatbox");
+            return Ok(ApiResponse<string>.Ok("", message: "Xóa thành công chatbox"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(new { message = ex.Message });
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 }

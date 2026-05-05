@@ -27,16 +27,20 @@ public class UserManagementFacade : Controller
     {
         try
         {
-            var user = await userService.RegisterCustomerAsync(request);
-            return Ok(user);
+            var result = await userService.RegisterCustomerAsync(request);
+            return Ok(ApiResponse<UserReponse>.Ok(result, message: "Tạo user thành công"));
         }
-        catch (InvalidOperationException ex)
+        catch (UnauthorizedAccessException ex)
         {
-            return Conflict(new { message = ex.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -46,15 +50,19 @@ public class UserManagementFacade : Controller
         try
         {
             var result = await authService.LoginAsync(request);
-            return Ok(result);
+            return Ok(ApiResponse<LoginResponse>.Ok(result, "Đăng nhập thành công"));
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
     
@@ -66,16 +74,20 @@ public class UserManagementFacade : Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
 
             var result = await authService.GetMeAsync(token);
-            return Ok(result);
+            return Ok(ApiResponse<UserReponse>.Ok(result, message: "Lấy thông tin bản thân thành công"));
 
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -87,15 +99,19 @@ public class UserManagementFacade : Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             
             var result = await userService.UpdateUserAsync(request, token);
-            return Ok(result);
+            return Ok(ApiResponse<UserReponse>.Ok(result,"Cập nhật người dùng thành công"));
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -106,15 +122,19 @@ public class UserManagementFacade : Controller
         {
             var email = request.Email;
             bool result = await authService.SendOtpCode(email);
-            return Ok(new {message = "Gửi OTP thành công"});
+            return Ok(ApiResponse<bool>.Ok(result, message: "Đã gửi OTP code"));
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = ex.Message });
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -124,11 +144,19 @@ public class UserManagementFacade : Controller
         try
         {
             var result = await authService.ChangePasswordAsync(request.email,request.otpCode, request.newPassword, request.oldPassword);
-            return Ok(new {message = "Đổi mật khẩu thành công", result = result});
+            return Ok(ApiResponse<UserReponse>.Ok(result, message: "Đổi mật khẩu thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return StatusCode(500, new { message = e.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -139,11 +167,19 @@ public class UserManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await userService.DeleteUserAsync(token);
-            return Ok(new {message = "Xóa thành công"});
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa người dùng thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return StatusCode(500, new { message = e.Message });
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 }

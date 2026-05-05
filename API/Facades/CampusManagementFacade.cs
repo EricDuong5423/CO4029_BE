@@ -11,12 +11,10 @@ namespace CO4029_BE.Facades;
 public class CampusManagementFacade : Controller
 {
     private readonly CampusService campusService;
-    private readonly UserService userService;
 
-    public CampusManagementFacade(CampusService campusService, UserService userService)
+    public CampusManagementFacade(CampusService campusService)
     {
         this.campusService = campusService;
-        this.userService = userService;
     }
 
     [HttpGet("")]
@@ -73,16 +71,19 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.CreateBuilding(request, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Tạo tòa nhà thành công",
-                data = result
-            });
+            return Ok(ApiResponse<BuildingReponse>.Ok(result, message: "Tạo tòa nhà thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -93,16 +94,19 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.UpdateBuilding(request, token, buildingId);
-            return Ok(new
-            {
-                success = true,
-                message = "Thay đổi thông tin tòa nhà thành công",
-                data = result
-            });
+            return Ok(ApiResponse<BuildingReponse>.Ok(result, message: "Thay đổi thông tin tòa nhà thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -113,16 +117,19 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.DeleteBuilding(buildingId, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Xóa tòa nhà thành công",
-                data = result
-            });
+            return Ok(ApiResponse<BuildingReponse>.Ok(result, message: "Xóa thành công tòa nhà"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -133,16 +140,19 @@ public class CampusManagementFacade : Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await campusService.GetBuildingsByUserId(token, userId);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy tất cả tòa nhà theo id người dùng thành công",
-                data = result
-            });
+            return Ok(ApiResponse<IEnumerable<BuildingReponse>>.Ok(result, message: "Lấy tòa nhà theo thông tin người add"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 }

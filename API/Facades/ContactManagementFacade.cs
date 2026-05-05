@@ -24,16 +24,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetCategories(token);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy tất cả danh mục thành công",
-                data = result
-            });
+            return Ok(ApiResponse<IEnumerable<CategoryReponse>>.Ok(result, message: "Lấy các danh mục thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -44,16 +47,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetCategory(categoryId, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy danh mục thành công",
-                data = result
-            });
+            return Ok(ApiResponse<CategoryReponse>.Ok(result, message: "Lấy danh mục id thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -64,16 +70,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.CreateCategory(request, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Tạo danh mục thành công",
-                data = result
-            });
+            return Ok(ApiResponse<CategoryReponse>.Ok(result, message: "Tạo danh mục thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -84,16 +93,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateCategory(request, categoryId, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Cập nhật danh mục thành công",
-                data = result
-            });
+            return Ok(ApiResponse<bool>.Ok(result, "Cập nhật thành công danh mục"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -104,16 +116,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.DeleteCategory(categoryId, token);
-            return Ok(new
-            {
-                success = true,
-                message = "Xóa danh mục thành công",
-                data = result
-            });
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa danh mục thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -124,16 +139,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetQuestions(token);
-            return Ok(new
-            {
-                success = true,
-                message = "Lấy tất cả câu hỏi thành công",
-                data = result
-            });
+            return Ok(ApiResponse<IEnumerable<QuestionReponse>>.Ok(result, message: "Lấy tất cả các câu hỏi thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
     
@@ -144,11 +162,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetQuestion(questionId, token);
-            return Ok(new { success = true, message = "Lấy câu hỏi thành công", data = result });
+            return Ok(ApiResponse<QuestionReponse>.Ok(result, message: "Lấy câu hỏi theo id"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -159,11 +185,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetQuestionsByCategory(categoryId, token);
-            return Ok(new { success = true, message = "Lấy danh sách câu hỏi theo danh mục thành công", data = result });
+            return Ok(ApiResponse<IEnumerable<QuestionReponse>>.Ok(result, message: "Lấy câu hỏi theo danh mục"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -174,11 +208,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.CreateQuestion(request, token);
-            return Ok(new { success = true, message = "Tạo câu hỏi thành công", data = result });
+            return Ok(ApiResponse<QuestionReponse>.Ok(result, message: "Tạo câu hỏi thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -189,11 +231,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateQuestion(request, questionId, token);
-            return Ok(new { success = true, message = "Cập nhật câu hỏi thành công", data = result });
+            return Ok(ApiResponse<bool>.Ok(result, message: "Cập nhật câu hỏi thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -204,11 +254,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.DeleteQuestion(questionId, token);
-            return Ok(new { success = true, message = "Xóa câu hỏi thành công", data = result });
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa thành công câu hỏi"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -219,11 +277,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetAnswers(token);
-            return Ok(new { success = true, message = "Lấy tất cả câu trả lời thành công", data = result });
+            return Ok(ApiResponse<IEnumerable<AnswerReponse>>.Ok(result, message: "Lấy các câu trả lời thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -234,11 +300,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetAnswer(answerId, token);
-            return Ok(new { success = true, message = "Lấy câu trả lời thành công", data = result });
+            return Ok(ApiResponse<AnswerReponse>.Ok(result, message: "Lấy câu trả theo id thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -249,11 +323,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetAnswersByUser(userId, token);
-            return Ok(new { success = true, message = "Lấy danh sách câu trả lời của người dùng thành công", data = result });
+            return Ok(ApiResponse<IEnumerable<AnswerReponse>>.Ok(result, message: "Lấy câu trả lời theo id của người dùng"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -264,11 +346,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.CreateAnswer(request, token);
-            return Ok(new { success = true, message = "Tạo câu trả lời thành công", data = result });
+            return Ok(ApiResponse<AnswerReponse>.Ok(result, message: "Tạo câu hỏi thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -279,11 +369,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateAnswer(request, answerId, token);
-            return Ok(new { success = true, message = "Cập nhật câu trả lời thành công", data = result });
+            return Ok(ApiResponse<bool>.Ok(result, message: "Cập nhật câu trả lời thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 
@@ -294,11 +392,19 @@ public class ContactManagementFacade: Controller
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.DeleteAnswer(answerId, token);
-            return Ok(new { success = true, message = "Xóa câu trả lời thành công", data = result });
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa câu trả lời thành công"));
         }
-        catch (Exception e)
+        catch (UnauthorizedAccessException ex)
         {
-            return BadRequest(e.Message);
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
 }
