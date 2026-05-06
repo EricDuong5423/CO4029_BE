@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CO4029_BE.Facades;
 
 [ApiController]
-[Route("contacts")]
+[Route("api/v1/contacts")]
 public class ContactManagementFacade: Controller
 {
     private readonly QuestionService  _questionService;

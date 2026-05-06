@@ -10,7 +10,7 @@ using Supabase;
 namespace CO4029_BE.Facades;
 
 [ApiController]
-[Route("users")]
+[Route("api/v1/users")]
 public class UserManagementFacade : Controller
 {
     private readonly UserService userService;

@@ -109,7 +109,6 @@ public class EmailService
                                 </div>
                                 <p>Mã OTP này có hiệu lực trong 5 phút. Vui lòng nhập mã OTP để tiếp tục.</p>
                             </div>
-                            <a href='#' class='button'>Xác nhận OTP</a>
                             <div class='footer'>
                                 <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email này.</p>
                             </div>

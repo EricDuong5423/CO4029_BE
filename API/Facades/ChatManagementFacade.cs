@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CO4029_BE.Facades;
 
 [ApiController]
-[Route("chat")]
+[Route("api/v1/chat")]
 public class ChatManagementFacade : Controller
 {
     private readonly HistoryService _historyService;

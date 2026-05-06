@@ -84,7 +84,7 @@ public class CampusService
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
         }
-        var buildings = await buildingRepository.GetBuildingsByUserId(user.id);
+        var buildings = await buildingRepository.GetBuildingsByUserId(UserID);
         
         return buildings.Select(building => building.ToReponse());
     }

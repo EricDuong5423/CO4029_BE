@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CO4029_BE.Facades;
 
 [ApiController]
-[Route("buildings")]
+[Route("api/v1/buildings")]
 public class CampusManagementFacade : Controller
 {
     private readonly CampusService campusService;
