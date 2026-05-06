@@ -69,8 +69,8 @@ public class AuthService
         {
             otp = OTP,
             email = user.email,
-            expires_at = DateTimeHelper.GetVnNow().AddMinutes(5),
-            created_at = DateTimeHelper.GetVnNow()
+            expires_at = DateTime.UtcNow.AddMinutes(5),
+            created_at = DateTime.UtcNow
         });
         return true;
     }
@@ -101,11 +101,9 @@ public class AuthService
         var otps =  await _otpCodeRepository.GetAllAsync();
         foreach (var otp in otps)
         {
-            DateTime expiresAtLocal = otp.expires_at.HasValue 
-                ? TimeZoneInfo.ConvertTimeFromUtc(otp.expires_at.Value, TimeZoneInfo.Local) 
-                : DateTime.MinValue;
-            if (otp.email == user.email && otp.is_verified == false && 
-                String.Equals(otp.otp, otpCode) && expiresAtLocal > DateTime.Now)
+            if (otp.email == user.email && otp.is_verified == false &&
+                String.Equals(otp.otp, otpCode) &&
+                otp.expires_at.HasValue && otp.expires_at.Value > DateTime.UtcNow)
             {
                 otp.is_verified = true;
                 await _otpCodeRepository.UpdateAsync(otp.id, otp);
