@@ -14,14 +14,11 @@ public class UserService
     private readonly Client _supabaseClient;
     private IConfiguration configuration;
 
-    public UserService(IUserRepository userRepository, Client supabaseClient)
+    public UserService(IUserRepository userRepository, Client supabaseClient, IConfiguration configuration)
     {
         _userRepository = userRepository;
         _supabaseClient = supabaseClient;
-        configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+        this.configuration = configuration;
     }
 
     public async Task<UserReponse> RegisterCustomerAsync(CreateUserRequest request)
@@ -48,7 +45,7 @@ public class UserService
 
         var authUser = signUpResult?.User;
         if (authUser == null)
-            throw new Exception("Không thể tạo tài khoản Supabase Auth.");
+            throw new InvalidOperationException("Không thể tạo tài khoản Supabase Auth.");
 
         var user = new User
         {
@@ -89,7 +86,7 @@ public class UserService
             throw new Exception("Không lấy được email từ Supabase user.");
         var user = await _userRepository.GetByEmailAsync(email);
         if (user == null)
-            throw new Exception("Không tìm thấy user trong database.");
+            throw new KeyNotFoundException("Không tìm thấy user trong database.");
         
         await _userRepository.DeleteAsync(user.id);
         await _supabaseClient.AdminAuth(configuration["SupabaseAdminKey"])

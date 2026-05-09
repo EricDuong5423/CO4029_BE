@@ -15,7 +15,6 @@ namespace AgenticAR.Application
             services.AddScoped<CampusService>();
             services.AddScoped<ChatboxService>();
             services.AddScoped<QuestionService>();
-            services.AddScoped<ChatbotApiService>();
             services.AddScoped<EmailService>();
             services.AddHttpClient<ChatbotApiService>();
             return services;

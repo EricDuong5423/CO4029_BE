@@ -68,7 +68,7 @@ public class QuestionService
         return reponse.ToReponse();
     }
 
-    public async Task<bool> UpdateCategory(CreateCategoryRequest categoryRequest
+    public async Task<CategoryReponse> UpdateCategory(CreateCategoryRequest categoryRequest
                                                     , string categoryId
                                                     , string accessToken)
     {
@@ -88,7 +88,7 @@ public class QuestionService
             existingCategory.Name = categoryRequest.Name;
         }
         await _categoryRepository.UpdateAsync(categoryId, existingCategory);
-        return true;
+        return existingCategory.ToReponse();
     }
 
     public async Task<bool> DeleteCategory(string categoryId, string accessToken)
@@ -161,7 +161,7 @@ public class QuestionService
         return reponse.Select(question => question.ToReponse());
     }
 
-    public async Task<bool> UpdateQuestion(CreateQuestionRequest questionRequest
+    public async Task<QuestionReponse> UpdateQuestion(CreateQuestionRequest questionRequest
         , string questionId
         , string accessToken)
     {
@@ -187,7 +187,7 @@ public class QuestionService
         }
         await _questionRepository.UpdateAsync(questionId, existingQuestion);
     
-        return true;
+        return existingQuestion.ToReponse();
     }
 
     public async Task<bool> DeleteQuestion(string questionId, string accessToken)
@@ -266,7 +266,7 @@ public class QuestionService
         return reponse.Select(answer => answer.ToReponse());
     }
 
-    public async Task<bool> UpdateAnswer(CreateAnswerRequest answerRequest, string answerId, string accessToken)
+    public async Task<AnswerReponse> UpdateAnswer(CreateAnswerRequest answerRequest, string answerId, string accessToken)
     {
         var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
@@ -286,7 +286,7 @@ public class QuestionService
         if(answerRequest.CreatedDate.HasValue) existingAnswer.CreateDate = answerRequest.CreatedDate;
         
         await _answerRepository.UpdateAsync(answerId, existingAnswer);
-        return true;
+        return existingAnswer.ToReponse();
     }
 
     public async Task<bool> DeleteAnswer(string answerId, string accessToken)

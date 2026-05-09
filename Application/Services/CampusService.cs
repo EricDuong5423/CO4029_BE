@@ -13,7 +13,6 @@ public class CampusService
     private readonly IBuildingRepository buildingRepository;
     private readonly IUserRepository userRepository;
     private readonly Client supabaseClient;
-    private readonly IConfiguration configuration;
 
     public CampusService(IBuildingRepository buildingRepository,
                          IUserRepository userRepository,
@@ -22,10 +21,6 @@ public class CampusService
         this.buildingRepository = buildingRepository;
         this.userRepository = userRepository;
         this.supabaseClient = supabaseClient;
-        this.configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
     }
 
     public async Task<IEnumerable<BuildingReponse>> GetAllBuildings(string accessToken)
@@ -98,7 +93,7 @@ public class CampusService
         }
         
         var oldBuilding = await buildingRepository.GetByIdAsync(buildingId);
-        if (oldBuilding == null) throw new Exception("Không tồn tại building");
+        if (oldBuilding == null) throw new KeyNotFoundException("Không tồn tại building");
         var updateModel = new Building
         {
             ID = buildingId,
@@ -114,7 +109,7 @@ public class CampusService
         return updateModel.ToReponse();
     }
 
-    public async Task<BuildingReponse> DeleteBuilding(string buildingId, string accessToken)
+    public async Task<bool> DeleteBuilding(string buildingId, string accessToken)
     {
         var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
@@ -123,12 +118,12 @@ public class CampusService
         }
         
         var building = await buildingRepository.GetByIdAsync(buildingId);
-        if(building == null) throw new Exception("Không tồn tại building");
+        if(building == null) throw new KeyNotFoundException("Không tồn tại building");
         
         if(building.UserId != user.id) throw new UnauthorizedAccessException("Bạn không có quyền xóa building của người khác");
         
         await buildingRepository.DeleteAsync(buildingId);
         
-        return building.ToReponse();
+        return true;
     }
 }

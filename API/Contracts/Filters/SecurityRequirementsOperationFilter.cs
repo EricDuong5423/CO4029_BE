@@ -5,21 +5,17 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
 {
     // 1. Bỏ dấu "/" ở cuối các endpoint để so sánh dễ hơn
     private readonly List<string> listPrefixesNeedProtect = new List<string> {
-        "users/me",
-        "users/update",
-        "users/delete-user",
-        "users/update-customer",
-        "chat",
-        "buildings",
-        "contacts"
+        "api/v1/users/me",
+        "api/v1/users/update",
+        "api/v1/users/delete-user",
+        "api/v1/users/update-customer",
+        "api/v1/chat",
+        "api/v1/buildings",
+        "api/v1/contacts"
     };
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        // Lấy đường dẫn endpoint hiện tại (VD: "buildings/{buildingId}")
         string currentEndpoint = context.ApiDescription.RelativePath;
-
-        // 2. Logic mới: Kiểm tra xem endpoint hiện tại có "BẮT ĐẦU" bằng các prefix kia không
-        // StringComparison.OrdinalIgnoreCase để không phân biệt hoa thường
         if (currentEndpoint != null && listPrefixesNeedProtect.Any(prefix => currentEndpoint.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
         {
             operation.Security = new List<OpenApiSecurityRequirement>

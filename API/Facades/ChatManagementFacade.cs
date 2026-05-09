@@ -29,6 +29,10 @@ public class ChatManagementFacade : Controller
             var result =  await _historyService.CreateHistory(createHistoryRequest, token);
             return Ok(ApiResponse<HistoryReponse>.Ok(result, message: "Tạo lịch sử trò chuyện thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -51,6 +55,10 @@ public class ChatManagementFacade : Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _historyService.GetHistoryByUserId(token);
             return Ok(ApiResponse<IEnumerable<HistoryReponse>>.Ok(result, message: "Lấy thông tin các lịch sử thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -76,6 +84,10 @@ public class ChatManagementFacade : Controller
             var result = await _chatboxService.CreateChatbox(token, createChatboxRequest);
             return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Tạo chat box thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -98,6 +110,10 @@ public class ChatManagementFacade : Controller
             var  token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _chatboxService.GetAllChatboxes(token);
             return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Lấy tất cả các chat box thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -122,6 +138,10 @@ public class ChatManagementFacade : Controller
             var result = await _chatboxService.GetChatboxById(token, chatboxId);
             return Ok(ApiResponse<ChatboxReponse>.Ok(result, message: "Lấy chat box theo id thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -145,6 +165,10 @@ public class ChatManagementFacade : Controller
             var result = await _chatboxService.GetAllChatboxesByHistory(token, historyId);
             return Ok(ApiResponse<IEnumerable<ChatboxReponse>>.Ok(result, message: "Lấy chat box theo lịch sử chat thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -165,8 +189,12 @@ public class ChatManagementFacade : Controller
         try
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
-            await _chatboxService.DeleteChatbox(token, chatboxId);
-            return Ok(ApiResponse<string>.Ok("", message: "Xóa thành công chatbox"));
+            var result = await _chatboxService.DeleteChatbox(token, chatboxId);
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa thành công chatbox"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {

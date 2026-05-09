@@ -38,8 +38,8 @@ public class AuthService
         var userEmail = authUser.Email;
         var user = await _userRepository.GetByEmailAsync(userEmail);
 
-        if (user == null) 
-            throw new Exception("Không tìm thấy user");
+        if (user == null)
+            throw new KeyNotFoundException("Không tìm thấy user");
 
         return session.ToResponse();
     }
@@ -54,14 +54,12 @@ public class AuthService
     {
         var user = await _userRepository.GetByEmailAsync(email);
         if (user == null)
-            throw new Exception("Không tìm thấy user trong database.");
+            throw new KeyNotFoundException("Không tìm thấy user trong database.");
         var otps = await _otpCodeRepository.GetAllAsync();
         foreach (var otp in otps)
         {
             if (otp.email == user.email && otp.is_verified == false)
-            {
-                throw new Exception("User đã được gửi otp code");
-            }
+                throw new InvalidOperationException("User đã được gửi otp code");
         }
         string OTP = OTPGenerator.GenerateOTP();
         _emailService.SendOTPMail(user.email, OTP);
@@ -86,7 +84,7 @@ public class AuthService
         }
         var session = await _supabaseClient.Auth.SignInWithPassword(email, oldPassword);
         if (session == null)
-            throw new Exception();
+            throw new Exception("Mật khẩu cũ không chính xác. Vui lòng thử lại.");
         var updatedResult = await _supabaseClient.Auth.Update(new Supabase.Gotrue.UserAttributes
         {
             Password = newPassword

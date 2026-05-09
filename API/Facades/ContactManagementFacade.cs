@@ -26,6 +26,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.GetCategories(token);
             return Ok(ApiResponse<IEnumerable<CategoryReponse>>.Ok(result, message: "Lấy các danh mục thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -48,6 +52,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetCategory(categoryId, token);
             return Ok(ApiResponse<CategoryReponse>.Ok(result, message: "Lấy danh mục id thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -72,6 +80,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.CreateCategory(request, token);
             return Ok(ApiResponse<CategoryReponse>.Ok(result, message: "Tạo danh mục thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -86,14 +98,18 @@ public class ContactManagementFacade: Controller
         }
     }
 
-    [HttpPost("categories/{categoryId}")]
-    public async Task<ActionResult<bool>> UpdateCategory(string categoryId, [FromBody] CreateCategoryRequest request)
+    [HttpPut("categories/{categoryId}")]
+    public async Task<ActionResult<CategoryReponse>> UpdateCategory(string categoryId, [FromBody] CreateCategoryRequest request)
     {
         try
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateCategory(request, categoryId, token);
-            return Ok(ApiResponse<bool>.Ok(result, "Cập nhật thành công danh mục"));
+            return Ok(ApiResponse<CategoryReponse>.Ok(result, "Cập nhật thành công danh mục"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -118,6 +134,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.DeleteCategory(categoryId, token);
             return Ok(ApiResponse<bool>.Ok(result, message: "Xóa danh mục thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -140,6 +160,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetQuestions(token);
             return Ok(ApiResponse<IEnumerable<QuestionReponse>>.Ok(result, message: "Lấy tất cả các câu hỏi thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -164,6 +188,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.GetQuestion(questionId, token);
             return Ok(ApiResponse<QuestionReponse>.Ok(result, message: "Lấy câu hỏi theo id"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -186,6 +214,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetQuestionsByCategory(categoryId, token);
             return Ok(ApiResponse<IEnumerable<QuestionReponse>>.Ok(result, message: "Lấy câu hỏi theo danh mục"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -210,6 +242,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.CreateQuestion(request, token);
             return Ok(ApiResponse<QuestionReponse>.Ok(result, message: "Tạo câu hỏi thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -224,14 +260,18 @@ public class ContactManagementFacade: Controller
         }
     }
 
-    [HttpPost("questions/{questionId}")]
-    public async Task<ActionResult<bool>> UpdateQuestion(string questionId, [FromBody] CreateQuestionRequest request)
+    [HttpPut("questions/{questionId}")]
+    public async Task<ActionResult<QuestionReponse>> UpdateQuestion(string questionId, [FromBody] CreateQuestionRequest request)
     {
         try
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateQuestion(request, questionId, token);
-            return Ok(ApiResponse<bool>.Ok(result, message: "Cập nhật câu hỏi thành công"));
+            return Ok(ApiResponse<QuestionReponse>.Ok(result, message: "Cập nhật câu hỏi thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -256,6 +296,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.DeleteQuestion(questionId, token);
             return Ok(ApiResponse<bool>.Ok(result, message: "Xóa thành công câu hỏi"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -278,6 +322,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetAnswers(token);
             return Ok(ApiResponse<IEnumerable<AnswerReponse>>.Ok(result, message: "Lấy các câu trả lời thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -302,6 +350,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.GetAnswer(answerId, token);
             return Ok(ApiResponse<AnswerReponse>.Ok(result, message: "Lấy câu trả theo id thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -324,6 +376,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.GetAnswersByUser(userId, token);
             return Ok(ApiResponse<IEnumerable<AnswerReponse>>.Ok(result, message: "Lấy câu trả lời theo id của người dùng"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -348,6 +404,10 @@ public class ContactManagementFacade: Controller
             var result = await _questionService.CreateAnswer(request, token);
             return Ok(ApiResponse<AnswerReponse>.Ok(result, message: "Tạo câu hỏi thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -362,14 +422,18 @@ public class ContactManagementFacade: Controller
         }
     }
 
-    [HttpPost("answers/{answerId}")]
-    public async Task<ActionResult<bool>> UpdateAnswer(string answerId, [FromBody] CreateAnswerRequest request)
+    [HttpPut("answers/{answerId}")]
+    public async Task<ActionResult<AnswerReponse>> UpdateAnswer(string answerId, [FromBody] CreateAnswerRequest request)
     {
         try
         {
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.UpdateAnswer(request, answerId, token);
-            return Ok(ApiResponse<bool>.Ok(result, message: "Cập nhật câu trả lời thành công"));
+            return Ok(ApiResponse<AnswerReponse>.Ok(result, message: "Cập nhật câu trả lời thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -393,6 +457,10 @@ public class ContactManagementFacade: Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await _questionService.DeleteAnswer(answerId, token);
             return Ok(ApiResponse<bool>.Ok(result, message: "Xóa câu trả lời thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {

@@ -30,6 +30,10 @@ public class UserManagementFacade : Controller
             var result = await userService.RegisterCustomerAsync(request);
             return Ok(ApiResponse<UserReponse>.Ok(result, message: "Tạo user thành công"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -51,6 +55,10 @@ public class UserManagementFacade : Controller
         {
             var result = await authService.LoginAsync(request);
             return Ok(ApiResponse<LoginResponse>.Ok(result, "Đăng nhập thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -77,6 +85,10 @@ public class UserManagementFacade : Controller
             return Ok(ApiResponse<UserReponse>.Ok(result, message: "Lấy thông tin bản thân thành công"));
 
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -91,7 +103,7 @@ public class UserManagementFacade : Controller
         }
     }
 
-    [HttpPost("update-customer")]
+    [HttpPut("update-customer")]
     public async Task<ActionResult<UserReponse>> Update([FromBody] UpdateUserRequest request)
     {
         try
@@ -100,6 +112,10 @@ public class UserManagementFacade : Controller
             
             var result = await userService.UpdateUserAsync(request, token);
             return Ok(ApiResponse<UserReponse>.Ok(result,"Cập nhật người dùng thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -124,6 +140,10 @@ public class UserManagementFacade : Controller
             bool result = await authService.SendOtpCode(email);
             return Ok(ApiResponse<bool>.Ok(result, message: "Đã gửi OTP code"));
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
         catch (UnauthorizedAccessException ex)
         {
             return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
@@ -145,6 +165,10 @@ public class UserManagementFacade : Controller
         {
             var result = await authService.ChangePasswordAsync(request.email,request.otpCode, request.newPassword, request.oldPassword);
             return Ok(ApiResponse<UserReponse>.Ok(result, message: "Đổi mật khẩu thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -168,6 +192,10 @@ public class UserManagementFacade : Controller
             var token = await AccessToken.GetAccessToken(HttpContext);
             var result = await userService.DeleteUserAsync(token);
             return Ok(ApiResponse<bool>.Ok(result, message: "Xóa người dùng thành công"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
         }
         catch (UnauthorizedAccessException ex)
         {
