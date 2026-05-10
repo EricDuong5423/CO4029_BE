@@ -14,25 +14,25 @@ public class QuestionService
     private readonly IQuestionRepository _questionRepository;
     private readonly IAnswerRepository _answerRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ICurrentUserService _currentUserService;
     private readonly IUserRepository _userRepository;
-    private readonly Client supabaseClient;
 
-    public QuestionService(IQuestionRepository questionRepository
-        , IAnswerRepository answerRepository
-        , ICategoryRepository categoryRepository
-        , IUserRepository userRepository
-        , Client supabaseClient)
+    public QuestionService(IQuestionRepository questionRepository,
+        IAnswerRepository answerRepository,
+        ICategoryRepository categoryRepository,
+        ICurrentUserService currentUserService,
+        IUserRepository userRepository)
     {
         _questionRepository = questionRepository;
         _answerRepository = answerRepository;
         _categoryRepository = categoryRepository;
+        _currentUserService = currentUserService;
         _userRepository = userRepository;
-        this.supabaseClient = supabaseClient;
     }
 
     public async Task<CategoryReponse> CreateCategory(CreateCategoryRequest categoryRequest, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -47,7 +47,7 @@ public class QuestionService
 
     public async Task<IEnumerable<CategoryReponse>> GetCategories(string accessToken)
     {
-        var  user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -58,7 +58,7 @@ public class QuestionService
 
     public async Task<CategoryReponse> GetCategory(string categoryId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -72,7 +72,7 @@ public class QuestionService
                                                     , string categoryId
                                                     , string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -93,7 +93,7 @@ public class QuestionService
 
     public async Task<bool> DeleteCategory(string categoryId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -110,7 +110,7 @@ public class QuestionService
     public async Task<QuestionReponse> CreateQuestion(CreateQuestionRequest questionRequest
                                                     , string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         Question newQuestion = new Question
         {
@@ -127,7 +127,7 @@ public class QuestionService
 
     public async Task<IEnumerable<QuestionReponse>> GetQuestions(string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -139,7 +139,7 @@ public class QuestionService
 
     public async Task<QuestionReponse> GetQuestion(string questionId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -151,7 +151,7 @@ public class QuestionService
 
     public async Task<IEnumerable<QuestionReponse>> GetQuestionsByCategory(string categoryId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -165,7 +165,7 @@ public class QuestionService
         , string questionId
         , string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -192,7 +192,7 @@ public class QuestionService
 
     public async Task<bool> DeleteQuestion(string questionId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -208,7 +208,7 @@ public class QuestionService
 
     public async Task<AnswerReponse> CreateAnswer(CreateAnswerRequest answerRequest, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -227,7 +227,7 @@ public class QuestionService
 
     public async Task<IEnumerable<AnswerReponse>> GetAnswers(string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -239,7 +239,7 @@ public class QuestionService
 
     public async Task<AnswerReponse> GetAnswer(string answerId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         
         var reponse = await _answerRepository.GetByIdAsync(answerId);
         if (reponse == null)
@@ -251,7 +251,7 @@ public class QuestionService
 
     public async Task<IEnumerable<AnswerReponse>> GetAnswersByUser(string userId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -268,7 +268,7 @@ public class QuestionService
 
     public async Task<AnswerReponse> UpdateAnswer(CreateAnswerRequest answerRequest, string answerId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -291,7 +291,7 @@ public class QuestionService
 
     public async Task<bool> DeleteAnswer(string answerId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");

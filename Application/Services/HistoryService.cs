@@ -11,19 +11,17 @@ namespace AgenticAR.Application.Services;
 public class HistoryService
 {
     private readonly IHistoryRepository historyRepository;
-    private readonly IUserRepository userRepository;
-    private readonly Client _supabaseClient;
+    private readonly ICurrentUserService _currentUserService;
 
-    public HistoryService(IHistoryRepository historyRepository, IUserRepository userRepository, Client supabaseClient)
+    public HistoryService(IHistoryRepository historyRepository, ICurrentUserService currentUserService)
     {
-        this.userRepository = userRepository;
         this.historyRepository = historyRepository;
-        this._supabaseClient = supabaseClient;
+        _currentUserService = currentUserService;
     }
     
     public async Task<HistoryReponse> CreateHistory(CreateHistoryRequest createHistoryRequest, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, _supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         var history = new History
         {
@@ -37,7 +35,7 @@ public class HistoryService
 
     public async Task<IEnumerable<HistoryReponse>> GetHistoryByUserId(string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, _supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         
         var histories = await historyRepository.GetHistorysByUserId(user.id);
         

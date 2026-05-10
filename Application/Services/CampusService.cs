@@ -11,21 +11,18 @@ namespace AgenticAR.Application.Services;
 public class CampusService
 {
     private readonly IBuildingRepository buildingRepository;
-    private readonly IUserRepository userRepository;
-    private readonly Client supabaseClient;
+    private readonly ICurrentUserService _currentUserService;
 
     public CampusService(IBuildingRepository buildingRepository,
-                         IUserRepository userRepository,
-                         Client supabaseClient)
+                         ICurrentUserService currentUserService)
     {
         this.buildingRepository = buildingRepository;
-        this.userRepository = userRepository;
-        this.supabaseClient = supabaseClient;
+        _currentUserService = currentUserService;
     }
 
     public async Task<IEnumerable<BuildingReponse>> GetAllBuildings(string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
@@ -38,7 +35,7 @@ public class CampusService
 
     public async Task<BuildingReponse> GetBuildingById(string buildingId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
@@ -51,7 +48,7 @@ public class CampusService
 
     public async Task<BuildingReponse> CreateBuilding(CreateBuildingRequest request, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
@@ -73,7 +70,7 @@ public class CampusService
 
     public async Task<IEnumerable<BuildingReponse>> GetBuildingsByUserId(string accessToken, string UserID)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
@@ -86,7 +83,7 @@ public class CampusService
 
     public async Task<BuildingReponse> UpdateBuilding(UpdateBuildingRequest request, string accessToken, string buildingId)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");
@@ -111,7 +108,7 @@ public class CampusService
 
     public async Task<bool> DeleteBuilding(string buildingId, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, supabaseClient, userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
         if (!AuthorizeHelper.AuthorizeForEmployee(user))
         {
             throw new UnauthorizedAccessException("Bạn không có quyền để sử dụng API này");

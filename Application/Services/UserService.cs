@@ -13,12 +13,15 @@ public class UserService
     private readonly IUserRepository _userRepository;
     private readonly Client _supabaseClient;
     private IConfiguration configuration;
+    private readonly ICurrentUserService _currentUserService;
 
-    public UserService(IUserRepository userRepository, Client supabaseClient, IConfiguration configuration)
+    public UserService(IUserRepository userRepository, Client supabaseClient,
+        IConfiguration configuration, ICurrentUserService currentUserService)
     {
         _userRepository = userRepository;
         _supabaseClient = supabaseClient;
         this.configuration = configuration;
+        _currentUserService = currentUserService;
     }
 
     public async Task<UserReponse> RegisterCustomerAsync(CreateUserRequest request)
@@ -64,7 +67,7 @@ public class UserService
 
     public async Task<UserReponse> UpdateUserAsync(UpdateUserRequest request, string accessToken)
     {
-        var user = await AccessToken.GetUser(accessToken, _supabaseClient, _userRepository);
+        var user = await _currentUserService.GetCurrentUser(accessToken);
 
         user.name = request.Name ?? user.name;
         user.phone = request.Phone ?? user.phone;

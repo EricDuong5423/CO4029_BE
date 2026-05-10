@@ -4,6 +4,25 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AControllerBase_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FUsers_003Fmucin_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F4e4050fe60584c9bad63740fb076efab1b3908_003Fb3_003Fc35fad3b_003FControllerBase_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AControllerBase_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FUsers_003Fmucin_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003F81a3bcf4bb6aa5e62a9839f9cfeeba6126496f4fa07d1e57b27a5176e42525_003FControllerBase_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AIGotrueClient_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FUsers_003Fmucin_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003F461efddbe7129bf727f5dc763be0f1392f4e57c2d1c47d4e6780b2cd2553852_003FIGotrueClient_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/dotCover/Editor/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\mucin\AppData\Local\JetBrains\Rider2025.2\resharper-host\temp\Rider\vAny\CoverageData\_CO4029_BE.1966500156\Snapshot\snapshot.utdcvr</s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">C:\Program Files (x86)\dotnet\sdk\8.0.417\MSBuild.dll</s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/DotNetCliExePath/@EntryValue">C:\Program Files (x86)\dotnet\dotnet.exe</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2928acbc_002D38f9_002D4b8a_002D971b_002Dcbb1006d56ea/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.Services.CampusServiceTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5166e194_002Dc3f4_002D40bf_002Db852_002D56e68c885256/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.UnitTest1.Test1&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d4193428_002D303f_002D4652_002D8869_002Dfd5ea39b3b54/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CampusServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.Services.CampusServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.Services.QuestionServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.Services.HistoryServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7C31DC1F-7A6E-4064-A84C-4FCE025D5346::net8.0::CO4029_BE.Tests.Services.UserServiceTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>

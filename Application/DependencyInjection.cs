@@ -17,6 +17,7 @@ namespace AgenticAR.Application
             services.AddScoped<QuestionService>();
             services.AddScoped<EmailService>();
             services.AddHttpClient<ChatbotApiService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             return services;
         }
     }
