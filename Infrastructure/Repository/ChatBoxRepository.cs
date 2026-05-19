@@ -5,6 +5,7 @@ namespace AgenticAR.Infrastructure.Repository
     public interface IChatBoxRepository : IRepository<Chatbox>
     {
         Task<IEnumerable<Chatbox>> GetChatboxesByHistoryId(string? historyId);
+        Task DeleteByHistoryId(string historyId);
     }
     public class ChatBoxRepository: Repository<Chatbox>, IChatBoxRepository
     {
@@ -18,6 +19,12 @@ namespace AgenticAR.Infrastructure.Repository
             var reponse = await Table.Where(x => x.history_id == historyId)
                                                            .Get();
             return reponse.Models;
+        }
+
+        public async Task DeleteByHistoryId(string historyId)
+        {
+            await Table.Where(x => x.history_id == historyId)
+                       .Delete();
         }
     }
 }

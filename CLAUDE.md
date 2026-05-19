@@ -55,7 +55,7 @@ Files mix two namespace roots — **do not change either**:
 ### Database & ORM
 
 - **Database**: Supabase PostgreSQL (cloud-hosted)
-- **ORM**: Supabase C# Postgrest client — entities must extend `BaseModel`
+- **ORM**: Supabase C# Postgrest client v1.1.1 — entities must extend `BaseModel`
 - **Client**: Singleton `Supabase.Client` registered in `Infrastructure/DependencyInjection.cs`; repositories use `Client.Postgrest.Table<T>()` via the base `Repository<T>` property `Table`
 - Common query pattern:
   ```csharp
@@ -65,18 +65,29 @@ Files mix two namespace roots — **do not change either**:
   await Table.Filter("id", Constants.Operator.Equals, id).Update(entity);
   await Table.Filter("id", Constants.Operator.Equals, id).Delete();
   ```
+- **CRITICAL**: `Table<T>` instance is mutable — calling `.Where()` or `.Filter()` mutates the shared instance. Never mix GET and INSERT on the same `Table` call chain; always call reads before writes in the same method.
 
 ### Authentication & Authorization
 
 - **Auth provider**: Supabase Auth (email/password)
-- **Tokens**: JWT Bearer tokens; extract with `AccessToken.GetAccessToken(HttpContext)` in facades, validate with `AccessToken.GetUser(client, token)` in services
+- **Tokens**: JWT Bearer tokens; extract with `AccessToken.GetAccessToken(HttpContext)` in facades, validate with `AccessToken.GetUser(accessToken, _supabaseClient, userRepository)` in services
 - **Roles**: Checked via `AuthorizeHelper.AuthorizeForEmployee(user)` — no ASP.NET `[Authorize]` attributes; authorization is manual in services
 - **OTP flow**: 6-digit codes stored in `otp_code` table with 5-minute TTL, delivered via Gmail SMTP (MailKit)
 
 ### Facade conventions
 
 - Facades inject concrete service classes (not interfaces), e.g. `HistoryService`, not `IHistoryService`
-- Error handling pattern: wrap every action in try/catch; return `BadRequest(ex.Message)` for auth/validation errors and `StatusCode(500, new { message = ex.Message })` for unexpected errors
+- All responses use the `ApiResponse<T>` wrapper:
+  - Success: `return Ok(ApiResponse<T>.Ok(result, message: "..."))` 
+  - Error: `return StatusCode(xxx, ApiResponse<object?>.Fail(ex.Message, "ERROR_CODE"))`
+- Standard exception → HTTP status mapping in every facade action:
+  ```csharp
+  catch (InvalidOperationException ex)   → Conflict(...)
+  catch (UnauthorizedAccessException ex) → Unauthorized(...)
+  catch (KeyNotFoundException ex)        → NotFound(...)
+  catch (Exception ex)                   → StatusCode(500, ...)
+  ```
+- **Never** pass a raw `Exception` object to `StatusCode()` — `System.Text.Json` cannot serialize `MethodBase`. Always use `ex.Message`.
 
 ### Key Utilities
 
@@ -85,14 +96,22 @@ Files mix two namespace roots — **do not change either**:
 - `Utils/OTPGenerator.cs` — 6-digit OTP generation
 - `Utils/AccessToken.cs` — JWT extraction and Supabase user validation
 
-### External service
+### External service — AI Chatbot
 
-`ChatbotApiService` calls an external AI chatbot via `HttpClient` (registered with `AddHttpClient<ChatbotApiService>()`).
+`ChatbotApiService` (`Application/Services/ChatbotApiService.cs`) calls the deployed chatbot at `https://aichatbot-mctj.onrender.com`.
+
+- Registered with `AddHttpClient<ChatbotApiService>()` in `Application/DependencyInjection.cs` — **do not also add `AddScoped<ChatbotApiService>()`**, that creates a duplicate registration conflict.
+- Request: `POST /chat` with header `X-API-Key`, body `{ message, history[] }`
+- Response: `{ type: "text" | "navigation", content: <string or object> }`
+  - `type == "text"` → `content` is a JSON string, read with `content.GetString()`
+  - `type == "navigation"` → `content` is a JSON object, serialize with `content.ToString()`
+- DTOs (`ChatbotHistoryMessage`, `ChatbotApiRequest`, `ChatbotApiResponse`) should live in separate files under `API/Contracts/Requests/` and `API/Contracts/Responses/`, **not inline** in `ChatbotApiService.cs`.
 
 ### Configuration
 
 All credentials live in `appsettings.json`:
 - `SupabaseUrl`, `SupabaseApiKey`, `SupabaseAdminKey` — Supabase connection
-- `ChatbotUrl`, `ChatbotApiKey` — External AI chatbot service
+- `ChatbotUrl` — `https://aichatbot-mctj.onrender.com`
+- `ChatbotApiKey` — matches `CHATBOT_API_KEY` env var on Render
 
 CORS is configured to allow any origin (`AllowAnyOrigin`). HTTPS redirect is disabled in development.

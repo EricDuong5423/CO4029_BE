@@ -115,4 +115,25 @@ public class ChatboxService
 
         return true;
     }
+
+    public async Task<bool> DeleteHistory(string accessToken, string historyId)
+    {
+        var user = await AccessToken.GetUser(accessToken, _supabaseClient, userRepository);
+
+        var history = await historyRepository.GetByIdAsync(historyId);
+
+        if (history == null)
+        {
+            throw new KeyNotFoundException("Không tìm thấy History với ID đã cung cấp");
+        }
+
+        if (user.id != history.user_id || !AuthorizeHelper.AuthorizeForEmployee(user))
+            throw new AuthenticationFailureException("Bạn không có quyền xóa history này");
+
+        await chatBoxRepository.DeleteByHistoryId(historyId);
+        
+        await historyRepository.DeleteAsync(historyId);
+
+        return true;
+    }
 }

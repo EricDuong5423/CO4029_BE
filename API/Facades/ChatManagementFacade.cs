@@ -209,4 +209,31 @@ public class ChatManagementFacade : Controller
             return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
         }
     }
+
+    [HttpDelete("histories/{historyId}")]
+    public async Task<ActionResult> DeleteHistory([FromRoute] string historyId)
+    {
+        try
+        {
+            var token = await AccessToken.GetAccessToken(HttpContext);
+            var result = await _chatboxService.DeleteHistory(token, historyId);
+            return Ok(ApiResponse<bool>.Ok(result, message: "Xóa thành công chat box theo id của history"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ApiResponse<object?>.Fail(ex.Message, "CONFLICT"));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ApiResponse<object?>.Fail(ex.Message, "UNAUTHORIZED"));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ApiResponse<object?>.Fail(ex.Message, "NOT_FOUND"));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<object?>.Fail(ex.Message, "INTERNAL_ERROR"));
+        }
+    }
 }
