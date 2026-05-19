@@ -127,7 +127,7 @@ public class ChatboxService
             throw new KeyNotFoundException("Không tìm thấy History với ID đã cung cấp");
         }
 
-        if (user.id != history.user_id || !AuthorizeHelper.AuthorizeForEmployee(user))
+        if (!user.id.Equals(history.user_id) && !AuthorizeHelper.AuthorizeForEmployee(user))
             throw new AuthenticationFailureException("Bạn không có quyền xóa history này");
 
         await chatBoxRepository.DeleteByHistoryId(historyId);
